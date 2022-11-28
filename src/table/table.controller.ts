@@ -1,13 +1,15 @@
 import { Controller, Get, Post } from '@nestjs/common';
+import { TableService } from './table.services';
 
 @Controller('table')
 export class TableController {
+  constructor(private tableService: TableService) {}
   @Get()
   findAll() {
-    return 'Buscar todas as mesas';
+    return this.tableService.findAll();
   }
   @Post()
   create() {
-    return 'Criar uma mesa';
+    return this.tableService.create();
   }
 }
