@@ -20,6 +20,7 @@ async function bootstrap() {
     .setVersion('1.0.0')
     .addTag('La-Brasa')
     .addTag('Table')
+    .addTag('Product')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
