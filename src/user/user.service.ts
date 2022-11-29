@@ -1,26 +1,58 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { PrismaService } from 'prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(private readonly prisma: PrismaService) {}
+
+  findAll(): Promise<User[]> {
+    return this.prisma.user.findMany();
   }
 
-  findAll() {
-    return `This action returns all user`;
+  async findById(id: string): Promise<User> {
+    const record = await this.prisma.user.findUnique({ where: { id } });
+    if (!record) {
+      throw new NotFoundException(`Não existe produto com o id: ${id}`);
+    }
+    return record;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string): Promise<User> {
+    return this.findById(id);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  create(dto: CreateUserDto): Promise<User> {
+    const data: User = { ...dto };
+
+    return this.prisma.user.create({ data }).catch(this.errorHandler);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async update(id: string, dto: UpdateUserDto): Promise<User> {
+    await this.findById(id);
+    const data: Partial<User> = { ...dto };
+    return this.prisma.user
+      .update({
+        where: { id },
+        data,
+      })
+      .catch(this.errorHandler);
+  }
+
+  async remove(id: string) {
+    await this.findById(id);
+    await this.prisma.user.delete({ where: { id } });
+  }
+
+  errorHandler(error: Error): undefined {
+    const message = error.message?.split('\n');
+    const lastmessage = message[message.length - 1]?.trim();
+    throw new UnprocessableEntityException(lastmessage || 'Algum erro ocorreu');
   }
 }
