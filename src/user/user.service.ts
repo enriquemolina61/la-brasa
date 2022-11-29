@@ -28,11 +28,20 @@ export class UserService {
     return this.findById(id);
   }
 
-  create(dto: CreateUserDto): Promise<User> {
+  async create(dto: CreateUserDto): Promise<User> {
+    if (dto.password !== dto.confirmPassword) {
+      throw new UnprocessableEntityException(
+        'A confirmação de senha não confere',
+      );
+    }
     delete dto.confirmPassword;
     const data: User = { ...dto };
 
-    return this.prisma.user.create({ data }).catch(this.errorHandler);
+    try {
+      return await this.prisma.user.create({ data });
+    } catch (error) {
+      return this.errorHandler(error);
+    }
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<User> {

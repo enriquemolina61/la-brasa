@@ -22,7 +22,7 @@ export class CreateUserDto {
   @IsNotEmpty()
   @ApiProperty({
     description: 'Email do usuário e deve ser unico',
-    example: 'Joãzinho',
+    example: 'joazinho@email.com',
   })
   email: string;
 
@@ -36,7 +36,7 @@ export class CreateUserDto {
   )
   @ApiProperty({
     description: 'Cpf do usuário',
-    example: '123.456.789-10',
+    example: '12345678910',
   })
   cpf: string;
 
@@ -59,6 +59,8 @@ export class CreateUserDto {
     description: 'A confirmação da senha deve ser igual a senha digitada.',
     example: 'Senha123@',
   })
+  @IsString()
+  @IsNotEmpty()
   confirmPassword: string;
 
   @IsUrl()
