@@ -13,7 +13,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateTableDto } from './dto/createtable.dto';
 import { UpdateTableDto } from './dto/updatetable.dto';
 import { Table } from './entities/table.entity';
-import { TableService } from './table.services';
+import { TableService } from './table.service';
 
 @ApiTags('Table')
 @Controller('table')

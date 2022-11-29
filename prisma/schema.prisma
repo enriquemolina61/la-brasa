@@ -8,9 +8,8 @@ datasource db {
 }
 
 model Table {
-  id     String @id @default(uuid())
-  number Int    @unique
-
+  id        String   @id @default(uuid())
+  number    Int      @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -18,25 +17,25 @@ model Table {
 }
 
 model Product {
-  id          String @id @default(uuid())
-  name        String @unique
+  id          String   @id @default(uuid())
+  name        String   @unique
   description String
   price       Float
   image       String
-
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("product")
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  nickname String @unique
-  password String
-  image    String
-
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  cpf       String   @unique
+  isAdmin   Boolean  @default(false) @map("is_admin")
+  password  String
+  image     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
