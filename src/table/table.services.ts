@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTableDto } from './dto/createtable.dto';
 import { UpdateTableDto } from './dto/updatetable.dto';
@@ -11,6 +15,7 @@ export class TableService {
   findAll(): Promise<Table[]> {
     return this.prisma.table.findMany();
   }
+
   async findById(id: string): Promise<Table> {
     const record = await this.prisma.table.findUnique({ where: { id } });
     if (!record) {
@@ -18,23 +23,36 @@ export class TableService {
     }
     return record;
   }
+
   async findOne(id: string): Promise<Table> {
     return this.findById(id);
   }
+
   create(dto: CreateTableDto): Promise<Table> {
     const data: Table = { ...dto };
 
-    return this.prisma.table.create({ data });
+    return this.prisma.table.create({ data }).catch(this.errorHandler);
   }
+
   async update(id: string, dto: UpdateTableDto): Promise<Table> {
     await this.findById(id);
     const data: Partial<Table> = { ...dto };
-    return this.prisma.table.update({
-      where: { id },
-      data,
-    });
+    return this.prisma.table
+      .update({
+        where: { id },
+        data,
+      })
+      .catch(this.errorHandler);
   }
+
   async remove(id: string) {
+    await this.findById(id);
     await this.prisma.table.delete({ where: { id } });
+  }
+
+  errorHandler(error: Error): undefined {
+    const message = error.message?.split('\n');
+    const lastmessage = message[message.length - 1]?.trim();
+    throw new UnprocessableEntityException(lastmessage || 'Algum erro ocorreu');
   }
 }
