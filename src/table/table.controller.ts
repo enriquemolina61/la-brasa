@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateTableDto } from './dto/createtable.dto';
 import { UpdateTableDto } from './dto/updatetable.dto';
@@ -30,5 +40,12 @@ export class TableController {
   @ApiOperation({ summary: 'Alterando uma mesa' })
   update(@Param('id') id: string, @Body() dto: UpdateTableDto): Promise<Table> {
     return this.tableService.update(id, dto);
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Deletando uma mesa' })
+  remove(@Param('id') id: string) {
+    this.tableService.remove(id);
   }
 }
