@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateTableDto } from './dto/createtable.dto';
+import { Table } from './entities/table.entity';
 import { TableService } from './table.services';
 
 @ApiTags('Table')
@@ -8,11 +9,19 @@ import { TableService } from './table.services';
 export class TableController {
   constructor(private readonly tableService: TableService) {}
   @Get()
-  findAll() {
+  @ApiOperation({ summary: 'Listar Todas as Mesas' })
+  findAll(): Promise<Table[]> {
     return this.tableService.findAll();
   }
+  @Get('/:id')
+  @ApiOperation({ summary: 'Listar uma Mesa' })
+  findOne(@Param('id') id: string): Promise<Table> {
+    return this.tableService.findOne(id);
+  }
+
   @Post()
-  create(@Body() dto: CreateTableDto) {
+  @ApiOperation({ summary: 'Criar uma Mesa' })
+  create(@Body() dto: CreateTableDto): Promise<Table> {
     return this.tableService.create(dto);
   }
 }
