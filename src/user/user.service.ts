@@ -56,11 +56,15 @@ export class UserService {
           'A confirmação de senha não confere',
         );
       }
-      dto.password = await bcrypt.hash(dto.password, 10);
     }
 
     delete dto.confirmPassword;
     const data: Partial<User> = { ...dto };
+
+    if (data.password) {
+      data.password = await bcrypt.hash(dto.password, 10);
+    }
+
     return this.prisma.user
       .update({
         where: { id },
