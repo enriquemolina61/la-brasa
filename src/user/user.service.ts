@@ -7,6 +7,7 @@ import { PrismaService } from 'prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -35,7 +36,10 @@ export class UserService {
       );
     }
     delete dto.confirmPassword;
-    const data: User = { ...dto };
+    const data: User = {
+      ...dto,
+      password: await bcrypt.hash(dto.password, 10),
+    };
 
     try {
       return await this.prisma.user.create({ data });
@@ -46,6 +50,15 @@ export class UserService {
 
   async update(id: string, dto: UpdateUserDto): Promise<User> {
     await this.findById(id);
+    if (dto.password) {
+      if (dto.password !== dto.confirmPassword) {
+        throw new UnprocessableEntityException(
+          'A confirmação de senha não confere',
+        );
+      }
+      dto.password = await bcrypt.hash(dto.password, 10);
+    }
+
     delete dto.confirmPassword;
     const data: Partial<User> = { ...dto };
     return this.prisma.user
