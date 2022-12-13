@@ -12,6 +12,7 @@ model Table {
   number    Int      @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  orders    Order[]
 
   @@map("table")
 }
@@ -24,6 +25,7 @@ model Product {
   image       String
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  orders      Order[]
 
   @@map("product")
 }
@@ -38,6 +40,24 @@ model User {
   image     String
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+  orders    Order[]
 
   @@map("user")
+}
+
+model Order {
+  id String @id @default(uuid())
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  table   Table  @relation(fields: [tableId], references: [id])
+  tableId String @map("table_id")
+
+  products Product[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("order")
 }
