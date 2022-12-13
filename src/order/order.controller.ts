@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
+import { LoggedUser } from 'src/auth/logged-user.decorator';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderService } from './order.service';
 
@@ -15,8 +17,8 @@ export class OrderController {
   @ApiOperation({
     summary: 'Criar um novo pedido',
   })
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.orderService.create(createOrderDto);
+  create(@LoggedUser() user: User, @Body() createOrderDto: CreateOrderDto) {
+    return this.orderService.create(user.id, createOrderDto);
   }
 
   @Get()
