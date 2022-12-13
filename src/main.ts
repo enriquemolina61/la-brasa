@@ -19,10 +19,12 @@ async function bootstrap() {
     .setDescription('Aplicação para gestão das mesas de uma hamburgueria')
     .setVersion('1.0.0')
     .addTag('La-Brasa')
+    .addTag('Auth')
     .addTag('Table')
     .addTag('Product')
     .addTag('User')
     .addTag('Order')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
