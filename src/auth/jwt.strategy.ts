@@ -1,6 +1,4 @@
 import { PassportStrategy } from '@nestjs/passport';
-import { User } from '@prisma/client';
-import { userInfo } from 'os';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { PrismaService } from 'prisma/prisma.service';
 
