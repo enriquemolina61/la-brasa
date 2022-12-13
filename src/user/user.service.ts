@@ -11,14 +11,27 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
+  private userSelect = {
+    id: true,
+    name: true,
+    email: true,
+    password: false,
+    cpf: true,
+    image: true,
+    createdAt: true,
+    updatedAt: true,
+  };
   constructor(private readonly prisma: PrismaService) {}
 
   findAll(): Promise<User[]> {
-    return this.prisma.user.findMany();
+    return this.prisma.user.findMany({ select: this.userSelect });
   }
 
   async findById(id: string): Promise<User> {
-    const record = await this.prisma.user.findUnique({ where: { id } });
+    const record = await this.prisma.user.findUnique({
+      where: { id },
+      select: this.userSelect,
+    });
     if (!record) {
       throw new NotFoundException(`Não existe produto com o id: ${id}`);
     }
@@ -42,7 +55,10 @@ export class UserService {
     };
 
     try {
-      return await this.prisma.user.create({ data });
+      return await this.prisma.user.create({
+        data,
+        select: this.userSelect,
+      });
     } catch (error) {
       return this.errorHandler(error);
     }
@@ -69,6 +85,7 @@ export class UserService {
       .update({
         where: { id },
         data,
+        select: this.userSelect,
       })
       .catch(this.errorHandler);
   }
