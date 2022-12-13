@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsString,
@@ -70,4 +71,12 @@ export class CreateUserDto {
     example: 'https://avatars.githubusercontent.com/u/76474854',
   })
   image: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  @ApiProperty({
+    description: 'Verifica se o usuário é administrador.',
+    example: 'true',
+  })
+  isAdmin: boolean;
 }
