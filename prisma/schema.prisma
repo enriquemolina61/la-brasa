@@ -80,3 +80,8 @@ model OrderProduct {
   @@unique([orderId, productId])
   @@map("order_product")
 }
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "../ERD.png"
+}
