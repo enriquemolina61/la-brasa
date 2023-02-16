@@ -30,7 +30,7 @@ export class UserController {
   @Get()
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Listar todos os usuários.' })
+  @ApiOperation({ summary: 'Listar todos os usuários:' })
   findAll() {
     return this.userService.findAll();
   }
