@@ -55,7 +55,7 @@ export class UserController {
   @UseGuards(AuthGuard())
   @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Deletar um usuário pelo Id.' })
+  @ApiOperation({ summary: 'Deletar um usuário pelo Id:' })
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
